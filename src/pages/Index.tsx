@@ -4,7 +4,7 @@ import TopicInput from "@/components/TopicInput";
 import PlanList from "@/components/PlanList";
 import LearningPlan from "@/components/LearningPlan";
 import { TopicInputData, LearningPlan as LearningPlanType } from "@/lib/types";
-import { generateLearningPlan } from "@/lib/planGenerator";
+import { generatePlanFromAPI } from "@/lib/api";
 import { deletePlan, getPlans, getPlan, savePlan } from "@/lib/storage";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -39,17 +39,27 @@ export default function Index() {
     }
   }, [activePlanId]);
 
-  const handleCreatePlan = (inputData: TopicInputData) => {
-    // Generate a new learning plan
-    const newPlan = generateLearningPlan(inputData);
-    
-    // Save the plan to local storage
-    if (savePlan(newPlan)) {
-      // Update the state
-      setPlans([...plans, newPlan]);
-      setActivePlanId(newPlan.id);
-      setShowInputForm(false);
-      toast.success("Learning plan created successfully!");
+  const handleCreatePlan = async (inputData: TopicInputData) => {
+    try {
+      // Show loading toast
+      toast.loading("Generating your learning plan...");
+      
+      // Generate a new learning plan using the API
+      const newPlan = await generatePlanFromAPI(inputData);
+      
+      // Save the plan to local storage
+      if (savePlan(newPlan)) {
+        // Update the state
+        setPlans([...plans, newPlan]);
+        setActivePlanId(newPlan.id);
+        setShowInputForm(false);
+        toast.dismiss();
+        toast.success("Learning plan created successfully!");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error instanceof Error ? error.message : "Failed to generate learning plan");
+      console.error("Error creating plan:", error);
     }
   };
   
