@@ -105,6 +105,4 @@ You can customize the list of prioritized domains in the backend code for your n
 
 ---
 
-## 📄 License
 
-MIT (or your license here)
