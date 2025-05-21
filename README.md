@@ -104,5 +104,6 @@ This app leverages Perplexity's `search_domain_filter` to prioritize free, high-
 You can customize the list of prioritized domains in the backend code for your needs.
 
 ---
-
+# Future Improvements :
+Switch to total WEb scrapping mode and maybe utilise google search or duck duck go search instead of a costly search ai api . 
 
